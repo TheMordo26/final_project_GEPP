@@ -1,6 +1,7 @@
+{# templates/home/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}¡Bienvenido a tu App de Formularios!{% endblock %}
 
 {% block body %}
 <style>
@@ -9,12 +10,10 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>¡Hola desde Symfony y React! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/Mordo/Desktop/forms_app_symfony/final_project_GEPP/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>C:/Users/Mordo/Desktop/forms_app_symfony/final_project_GEPP/templates/home/index.html.twig</code></li>
-    </ul>
+    <p>Esta es tu página de inicio. Ahora que está funcionando, podemos empezar a construir.</p>
+    <p>Puedes editar este archivo en: <code>{{ 'templates/home/index.html.twig'|file_link(0) }}</code></p>
+    <p>Y tu controlador en: <code>{{ 'src/Controller/HomeController.php'|file_link(0) }}</code></p>
 </div>
 {% endblock %}
