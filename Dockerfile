@@ -1,5 +1,3 @@
-# Dockerfile
-
 FROM php:8.2-fpm-alpine
 
 RUN apk add --no-cache \
@@ -11,7 +9,8 @@ RUN apk add --no-cache \
     curl \
     unzip \
     nodejs \
-    npm
+    npm \
+    acl
 
 RUN curl -sS https://symfony.com/installer -o /usr/local/bin/symfony \
     && chmod +x /usr/local/bin/symfony
@@ -26,9 +25,11 @@ COPY . /var/www/html/
 WORKDIR /var/www/html
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --no-dev --optimize-autoloader --no-plugins --no-scripts \
-    && composer dump-autoload --optimize --no-dev --classmap-authoritative \
-    && php bin/console cache:clear --env=prod --no-warmup \
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN composer install --no-dev --optimize-autoloader
+
+RUN php bin/console cache:clear --env=prod --no-warmup \
     && php bin/console assets:install public --env=prod --symlink --relative \
     && php bin/console doctrine:migrations:migrate --no-interaction --env=prod
 
