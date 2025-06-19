@@ -27,6 +27,7 @@ WORKDIR /var/www/html
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --optimize-autoloader --no-plugins --no-scripts \
+    && composer dump-autoload --optimize --no-dev --classmap-authoritative \
     && php bin/console cache:clear --env=prod --no-warmup \
     && php bin/console assets:install public --env=prod --symlink --relative \
     && php bin/console doctrine:migrations:migrate --no-interaction --env=prod
