@@ -13,6 +13,9 @@ RUN apk add --no-cache \
     nodejs \
     npm
 
+RUN curl -sS https://symfony.com/installer -o /usr/local/bin/symfony \
+    && chmod +x /usr/local/bin/symfony
+
 RUN docker-php-ext-install pdo pdo_pgsql opcache
 
 COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
@@ -23,10 +26,13 @@ COPY . /var/www/html/
 WORKDIR /var/www/html
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-plugins --no-scripts \
+    && php bin/console cache:clear --env=prod --no-warmup \
+    && php bin/console assets:install public --env=prod --symlink --relative \
+    && php bin/console doctrine:migrations:migrate --no-interaction --env=prod
 
 RUN npm install
-RUN npm run build # Este comando es crucial para compilar los assets de React para producción
+RUN npm run build
 
 RUN chown -R www-data:www-data var public
 RUN setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var
