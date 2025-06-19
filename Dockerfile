@@ -30,8 +30,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --optimize-autoloader
 
 RUN php bin/console cache:clear --env=prod --no-warmup \
-    && php bin/console assets:install public --env=prod --symlink --relative \
-    && php bin/console doctrine:migrations:migrate --no-interaction --env=prod
+    && php bin/console assets:install public --env=prod --symlink --relative
 
 RUN npm install
 RUN npm run build
