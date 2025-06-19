@@ -29,9 +29,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --optimize-autoloader
 
-RUN php bin/console cache:clear --env=prod --no-warmup \
-    && php bin/console assets:install public --env=prod --symlink --relative
-
 RUN npm install
 RUN npm run build
 
@@ -49,4 +46,6 @@ COPY ./docker/supervisor/conf.d/php-fpm.conf /etc/supervisor/conf.d/php-fpm.conf
 
 EXPOSE 80
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+CMD php bin/console cache:clear --env=prod --no-warmup && \
+    php bin/console assets:install public --env=prod --symlink --relative && \
+    /usr/bin/supervisord -c /etc/supervisord.conf
