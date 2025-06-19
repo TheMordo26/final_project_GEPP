@@ -6,6 +6,7 @@ RUN apk add --no-cache \
     nginx \
     supervisor \
     postgresql-client \
+    postgresql-dev \
     git \
     curl \
     unzip \
