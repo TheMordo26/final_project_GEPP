@@ -17,8 +17,8 @@ const LoginForm = () => {
                 const response = await axios.get('/api/csrf_token');
                 setCsrfToken(response.data.csrfToken);
             } catch (err) {
-                console.error('Error getting token CSRF:', err);
-                setError('The login form could not be loaded. Try again.');
+                console.error('Error fetching CSRF token:', err);
+                setError('Failed to load login form. Please try again.');
             } finally {
                 setLoading(false);
             }
@@ -31,7 +31,7 @@ const LoginForm = () => {
         setError(null);
 
         if (!csrfToken) {
-            setError('Security token not available. Try again.');
+            setError('Security token not available. Cannot log in.');
             return;
         }
 
@@ -40,13 +40,20 @@ const LoginForm = () => {
                 email,
                 password,
                 _csrf_token: csrfToken,
+            }, {
+                withCredentials: true, 
             });
 
-            console.log('Successful login:', response);
+            if (response.data && response.data.redirect) {
+                window.location.href = response.data.redirect;
+            } else {
+                console.log('Login successful, but no redirect specified from backend. Redirecting to home by default.');
+                window.location.href = '/';
+            }
 
         } catch (err) {
-            console.error('Login error:', err.response ? err.response.data : err.message);
-            setError(err.response?.data?.message || 'Invalid credentials. Try again.');
+            console.error('Error logging in:', err.response ? err.response.data : err.message);
+            setError(err.response?.data?.message || 'Invalid credentials. Please try again.');
         }
     };
 
@@ -62,10 +69,10 @@ const LoginForm = () => {
                     {error && <Alert variant="danger">{error}</Alert>}
                     <Form onSubmit={handleSubmit}>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <Form.Label>Email</Form.Label>
+                            <Form.Label>Email address</Form.Label>
                             <Form.Control
                                 type="email"
-                                placeholder="Email"
+                                placeholder="Enter your email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
@@ -84,7 +91,7 @@ const LoginForm = () => {
                         </Form.Group>
 
                         <Button variant="primary" type="submit" className="w-100">
-                            Iniciar Sesión
+                            Log In
                         </Button>
                     </Form>
                 </Col>

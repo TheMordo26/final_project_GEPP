@@ -15,6 +15,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -45,10 +46,19 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['redirect' => $targetPath], Response::HTTP_OK);
+            }
             return new RedirectResponse($targetPath);
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('app_home'));
+        $defaultRedirectUrl = $this->urlGenerator->generate('app_home');
+
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse(['redirect' => $defaultRedirectUrl], Response::HTTP_OK);
+        }
+
+        return new RedirectResponse($defaultRedirectUrl);
     }
 
     protected function getLoginUrl(Request $request): string
