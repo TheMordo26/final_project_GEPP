@@ -6,12 +6,23 @@ import ReactDOM from 'react-dom/client';
 
 import RegisterForm from './components/Auth/RegisterForm';
 
+import LoginForm from './components/Auth/LoginForm';
+
 document.addEventListener('DOMContentLoaded', () => {
     const registerFormRoot = document.getElementById('react-register-form');
     if (registerFormRoot) {
         ReactDOM.createRoot(registerFormRoot).render(
             <React.StrictMode>
                 <RegisterForm />
+            </React.StrictMode>
+        );
+    }
+
+    const loginFormRoot = document.getElementById('react-login-form');
+    if (loginFormRoot) {
+        ReactDOM.createRoot(loginFormRoot).render(
+            <React.StrictMode>
+                <LoginForm />
             </React.StrictMode>
         );
     }
@@ -25,5 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //     );
     // }
 });
+
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

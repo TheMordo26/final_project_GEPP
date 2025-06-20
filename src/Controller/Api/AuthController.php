@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;  
 
 #[Route('/api', name: 'api_')]
 class AuthController extends AbstractController
@@ -59,5 +60,13 @@ class AuthController extends AbstractController
         $entityManager->flush();
 
         return new JsonResponse(['message' => 'User successfully registered', 'user' => ['id' => $user->getId(), 'email' => $user->getEmail()]], Response::HTTP_CREATED);
+    }
+
+    #[Route('/csrf_token', name: 'csrf_token', methods: ['GET'])]
+    public function getCsrfToken(CsrfTokenManagerInterface $csrfTokenManager): JsonResponse
+    {
+        $csrfToken = $csrfTokenManager->getToken('authenticate');
+
+        return new JsonResponse(['csrfToken' => $csrfToken->getValue()]);
     }
 }
