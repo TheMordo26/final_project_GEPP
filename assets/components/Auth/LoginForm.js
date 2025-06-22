@@ -1,5 +1,3 @@
-// assets/components/Auth/LoginForm.js
-
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
 import axios from 'axios';
@@ -41,7 +39,10 @@ const LoginForm = () => {
                 password,
                 _csrf_token: csrfToken,
             }, {
-                withCredentials: true, 
+                withCredentials: true,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest' // Importante para que Symfony detecte la petición como XHR
+                }
             });
 
             if (response.data && response.data.redirect) {
@@ -53,7 +54,10 @@ const LoginForm = () => {
 
         } catch (err) {
             console.error('Error logging in:', err.response ? err.response.data : err.message);
-            setError(err.response?.data?.message || 'Invalid credentials. Please try again.');
+            const errorMessage = err.response && err.response.data && err.response.data.message
+                                 ? err.response.data.message
+                                 : 'Invalid credentials. Please try again.';
+            setError(errorMessage);
         }
     };
 
