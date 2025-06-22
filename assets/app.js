@@ -5,8 +5,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import RegisterForm from './components/Auth/RegisterForm';
-
 import LoginForm from './components/Auth/LoginForm';
+import TemplateForm from './components/Template/TemplateForm';
 
 document.addEventListener('DOMContentLoaded', () => {
     const registerFormRoot = document.getElementById('react-register-form');
@@ -23,6 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
         ReactDOM.createRoot(loginFormRoot).render(
             <React.StrictMode>
                 <LoginForm />
+            </React.StrictMode>
+        );
+    }
+
+    const templateFormRoot = document.getElementById('react-template-form');
+    if (templateFormRoot) {
+        ReactDOM.createRoot(templateFormRoot).render(
+            <React.StrictMode>
+                <TemplateForm />
             </React.StrictMode>
         );
     }
