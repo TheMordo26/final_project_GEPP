@@ -1,9 +1,15 @@
+# config/packages/framework.yaml
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(APP_SECRET)%'
 
     # Note that the session will be started ONLY if you read or write from it.
-    session: true
+    session:
+        handler_id: ~
+        cookie_secure: auto
+        cookie_samesite: lax 
+        # cookie_lifetime: 86400
+        # name: APP_SESSION
 
     #esi: true
     #fragments: true
