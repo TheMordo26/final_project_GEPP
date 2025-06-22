@@ -10,7 +10,8 @@ framework:
         cookie_samesite: lax 
         # cookie_lifetime: 86400
         # name: APP_SESSION
-
+        cookie_domain: '%env(APP_HOST_DOMAIN)%'
+        
     #esi: true
     #fragments: true
 
