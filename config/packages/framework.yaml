@@ -11,7 +11,8 @@ framework:
         # cookie_lifetime: 86400
         # name: APP_SESSION
         cookie_domain: '%env(APP_HOST_DOMAIN)%'
-        
+        cookie_path: '/'
+
     #esi: true
     #fragments: true
 
