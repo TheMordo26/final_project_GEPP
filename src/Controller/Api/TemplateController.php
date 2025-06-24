@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 #[Route('/api/templates')]
 #[IsGranted('ROLE_USER')]
@@ -32,7 +33,7 @@ class TemplateController extends AbstractController
         $template = $this->serializer->deserialize(
             $request->getContent(),
             Template::class,
-            'json',
+            'json'
         );
 
         /** @var User $user */
@@ -56,10 +57,36 @@ class TemplateController extends AbstractController
 
         return new JsonResponse(
             $this->serializer->serialize($template, 'json', [
+                AbstractNormalizer::ATTRIBUTES => ['id', 'title', 'description', 'topic', 'imagePath', 'isPublic', 'createdAt', 'updatedAt', 'owner' => ['id', 'email']] // Incluye el ID y email del owner
             ]),
             Response::HTTP_CREATED,
             [],
             true
         );
+    }
+
+    #[Route('', name: 'get_user_templates', methods: ['GET'])]
+    public function getUserTemplates(): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return new JsonResponse(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $templates = $this->entityManager->getRepository(Template::class)->findBy(['owner' => $user]);
+
+        $serializedTemplates = $this->serializer->serialize(
+            $templates,
+            'json',
+            [
+                AbstractNormalizer::ATTRIBUTES => [
+                    'id', 'title', 'description', 'topic', 'imagePath', 'isPublic', 'createdAt', 'updatedAt',
+                    'owner' => ['id', 'email']
+                ]
+            ]
+        );
+
+        return new JsonResponse($serializedTemplates, Response::HTTP_OK, [], true);
     }
 }

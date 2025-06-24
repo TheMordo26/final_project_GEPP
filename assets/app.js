@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom/client';
 import RegisterForm from './components/Auth/RegisterForm';
 import LoginForm from './components/Auth/LoginForm';
 import TemplateForm from './components/Template/TemplateForm';
+import TemplateList from './components/Template/TemplateList';
 
 document.addEventListener('DOMContentLoaded', () => {
     const registerFormRoot = document.getElementById('react-register-form');
@@ -36,14 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 
-    // const appRoot = document.getElementById('react-root');
-    // if (appRoot) {
-    //     ReactDOM.createRoot(appRoot).render(
-    //         <React.StrictMode>
-    //             <App />
-    //         </React.StrictMode>
-    //     );
-    // }
+    const templateListRoot = document.getElementById('react-template-list');
+    if (templateListRoot) {
+        ReactDOM.createRoot(templateListRoot).render(
+            <React.StrictMode>
+                <TemplateList />
+            </React.StrictMode>
+        );
+    }
 });
 
 
